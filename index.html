@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nexto - Ghana's #1 Food Delivery</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="style.css"/>
+  <!-- FAVICONS -->
+  <link rel="icon" href="images/nexto-logo.jpg" type="image/jpeg">
+  <link rel="apple-touch-icon" href="images/nexto-logo.jpg">
+  <style>
+    :root { --sky-blue: #0ea5e9; --dark-bg: #0f172a; --dark-card: #1e293b; }
+    .sky-blue { color: var(--sky-blue); }
+    .bg-sky-blue { background-color: var(--sky-blue); }
+    .btn-blue { background: var(--sky-blue); color: white; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 600; }
+    .btn-blue:hover { background: #0284c7; }
+    .hero { background: linear-gradient(135deg, #0ea5e9, #0284c7); color: white; padding: 8rem 2rem 6rem; text-align: center; position: relative; }
+    .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+    .restaurant-img-container { 
+      background: white; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center;
+      padding: 0 !important;
+    }
+    .restaurant-img { 
+      width: 260px; 
+      height: 180px; 
+      object-fit: contain; 
+      border-radius: 1rem; 
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+    .food-img { height: 200px; object-fit: cover; }
+    .sidebar { position: fixed; right: -100%; top: 0; width: 420px; height: 100%; background: white; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transition: 0.4s; padding: 2rem; overflow-y: auto; z-index: 40; }
+    .sidebar.open { right: 0; }
+    .cart-btn, .whatsapp-btn, .back-to-top { 
+      position: fixed; 
+      bottom: 2rem; 
+      background: var(--sky-blue); 
+      color: white; 
+      width: 70px; 
+      height: 70px; 
+      border-radius: 50%; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: 1.8rem; 
+      box-shadow: 0 10px 30px rgba(14,165,233,0.4); 
+      cursor: pointer; 
+      z-index: 30; 
+      transition: all 0.3s; 
+    }
+    .whatsapp-btn { 
+      bottom: 10rem; 
+      left: 2rem; 
+      background: #25d366; 
+    }
+    .back-to-top { 
+      bottom: 10rem; 
+      right: 2rem; 
+      opacity: 0; 
+      pointer-events: none; 
+    }
+    .back-to-top.visible { opacity: 1; pointer-events: auto; }
+    .cart-count { 
+      position: absolute; 
+      top: -8px; 
+      right: -8px; 
+      background: #ef4444; 
+      color: white; 
+      width: 28px; 
+      height: 28px; 
+      border-radius: 50%; 
+      font-size: 0.9rem; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-weight: bold; 
+    }
+    .close-btn { font-size: 2rem; cursor: pointer; }
+    .footer { background: #1f2937; color: white; padding: 4rem 2rem; }
+    .dark-mode { background: #0f172a; color: #e2e8f0; }
+    .dark-mode .hero { background: linear-gradient(135deg, #1e40af, #1e3a8a); }
+    .dark-mode .bg-white { background: var(--dark-card) !important; }
+    .dark-mode .text-gray-800 { color: #e2e8f0 !important; }
+    .dark-mode .border-gray-300 { border-color: #475569 !important; }
+    .dark-mode .text-gray-600 { color: #94a3b8 !important; }
+    .dark-mode .bg-blue-50 { background: #1e293b !important; }
+    .fly-item { 
+      position: fixed; 
+      z-index: 1000; 
+      pointer-events: none; 
+      animation: fly 1s ease-in-out forwards; 
+      font-size: 2rem; 
+    }
+    @keyframes fly { 
+      0% { opacity: 1; transform: scale(1) translate(0,0); } 
+      100% { opacity: 0; transform: scale(0.3) translate(var(--tx), var(--ty)); } 
+    }
+  </style>
+</head>
+<body class="transition-colors duration-500">
+
+  <!-- DARK MODE TOGGLE -->
+  <button onclick="toggleDarkMode()" class="fixed top-6 right-6 z-50 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg">
+    <i class="fas fa-moon text-xl dark:hidden"></i>
+    <i class="fas fa-sun text-xl hidden dark:block"></i>
+  </button>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="absolute top-6 left-6 z-10">
+      <img src="images/nexto-logo.jpg" alt="Nexto Logo" class="w-40 h-40 drop-shadow-2xl">
+    </div>
+    <div class="px-6">
+      <h1 class="text-5xl md:text-7xl font-bold mb-4 drop-shadow-lg">Nexto</h1>
+      <p class="text-xl md:text-2xl mb-8">Ghana's Fastest Food Delivery</p>
+      <input type="text" id="search" placeholder="Search restaurants, jollof, waakye..." 
+             class="w-full max-w-xl px-6 py-4 rounded-full text-lg outline-none shadow-lg bg-white text-gray-800">
+    </div>
+  </section>
+
+  <!-- RESTAURANTS GRID -->
+  <section class="container mx-auto px-4 py-16">
+    <h2 class="text-4xl font-bold text-center mb-12 text-gray-800">Top Restaurants</h2>
+    <div id="restaurants" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+  </section>
+
+  <!-- ORDER CONFIRMATION (IN-PAGE) -->
+  <div id="confirmation" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center hidden z-50 p-4">
+    <div class="bg-white dark:bg-gray-900 rounded-3xl p-10 max-w-lg w-full text-center shadow-2xl">
+      <i class="fas fa-check-circle text-8xl text-green-500 mb-6"></i>
+      <h2 class="text-4xl font-bold mb-4">Order Placed Successfully!</h2>
+      <p class="text-xl mb-2">Your Order ID: <span id="confirmId" class="font-bold sky-blue"></span></p>
+      <p class="text-lg mb-6">We'll call you soon. Estimated delivery: 25-40 mins</p>
+      <div class="w-32 h-32 mx-auto mb-6">
+        <img src="images/delivery-bike.gif" alt="Rider coming" class="w-full h-full object-contain">
+      </div>
+      <button onclick="document.getElementById('confirmation').classList.add('hidden')" 
+              class="btn-blue text-lg px-12 py-4">Continue Browsing</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container mx-auto px-4 text-center">
+      <p class="text-gray-400 mb-4 text-lg font-medium">Get in Touch</p>
+      <div class="flex flex-col md:flex-row justify-center items-center space-y-2 md:space-y-0 md:space-x-8">
+        <a href="mailto:amfoowusukelvin@gmail.com" class="flex items-center justify-center text-white hover:text-sky-blue">
+          <i class="fas fa-envelope mr-2"></i> amfoowusukelvin@gmail.com
+        </a>
+        <a href="tel:+233204679369" class="flex items-center justify-center text-white hover:text-sky-blue">
+          <i class="fas fa-phone mr-2"></i> +233 20 467 9369
+        </a>
+      </div>
+      <p class="text-sm text-gray-500 mt-4">© 2025 Nexto. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- CART SIDEBAR -->
+  <div id="cartSidebar" class="sidebar bg-white dark:bg-gray-800">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold flex items-center text-gray-800 dark:text-white">
+        <i class="fas fa-shopping-cart mr-2 sky-blue"></i> Your Cart
+      </h3>
+      <i onclick="toggleCart()" class="close-btn text-gray-500 hover:text-gray-800 dark:hover:text-white">X</i>
+    </div>
+    <div id="cartItems" class="space-y-4"></div>
+    <div class="mt-8 p-4 bg-blue-50 dark:bg-gray-700 rounded-xl">
+      <div class="flex justify-between text-lg mb-2 text-gray-800 dark:text-gray-200"><span>Subtotal:</span> <span id="subtotal">GH₵0</span></div>
+      <div class="flex justify-between text-lg mb-2 text-gray-800 dark:text-gray-200"><span>Service Fee:</span> <span>GH₵2</span></div>
+      <div class="flex justify-between text-lg mb-2 text-gray-800 dark:text-gray-200"><span>Delivery Fee:</span> <span>GH₵5</span></div>
+      <div class="flex justify-between text-xl font-bold sky-blue"><span>Total:</span> <span id="total">GH₵7</span></div>
+    </div>
+    <input type="text" id="promoCode" placeholder="Have a promo code?" class="w-full p-4 border rounded-xl mt-4 dark:bg-gray-700 dark:border-gray-600">
+    <button onclick="applyPromo()" class="w-full bg-gray-200 dark:bg-gray-600 py-2 rounded-xl mt-2">Apply Promo</button>
+    <button onclick="showCheckout()" class="w-full btn-blue mt-6 text-lg py-3">Proceed to Checkout</button>
+  </div>
+
+  <!-- CART BUTTON -->
+  <div onclick="toggleCart()" class="cart-btn">
+    <i class="fas fa-shopping-cart"></i>
+    <div id="cartCount" class="cart-count">0</div>
+  </div>
+
+  <!-- WHATSAPP BUTTON -->
+  <a href="https://wa.me/233204679369?text=Hi%20Nexto!%20I%20need%20help%20with%20my%20order" target="_blank" class="whatsapp-btn">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <!-- BACK TO TOP -->
+  <div onclick="window.scrollTo({top:0,behavior:'smooth'})" class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+
+  <!-- CHECKOUT MODAL -->
+  <div id="checkoutModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-50 p-4">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full shadow-2xl">
+      <h3 class="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-white">Complete Your Order</h3>
+      <input type="text" id="name" placeholder="Full Name" class="w-full p-4 border rounded-xl mb-4 border-gray-300 dark:bg-gray-700 dark:border-gray-600">
+      <input type="text" id="phone" placeholder="Phone (055...)" class="w-full p-4 border rounded-xl mb-4 border-gray-300 dark:bg-gray-700 dark:border-gray-600">
+      <textarea id="address" placeholder="Delivery Address (e.g. Osu, near Papaye)" class="w-full p-4 border rounded-xl mb-4 h-28 border-gray-300 dark:bg-gray-700 dark:border-gray-600"></textarea>
+      <div class="flex gap-3">
+        <button id="placeOrderBtn" onclick="placeOrder()" class="flex-1 bg-sky-blue text-white py-3 rounded-xl font-bold hover:bg-blue-600">Place Order</button>
+        <button onclick="hideCheckout()" class="flex-1 bg-gray-300 dark:bg-gray-600 py-3 rounded-xl font-bold hover:bg-gray-400">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = '/api';
+    let cart = [];
+    const deliveryFee = 5;
+    const serviceFee = 2;
+    let promoDiscount = 0;
+
+    const restaurants = [
+      { id: 1, name: "Papaye Fast Food", rating: 4.8, time: "25-35 min", cuisine: "Ghanaian", image: "images/papaye.png", open: true },
+      { id: 2, name: "KFC Osu", rating: 4.6, time: "20-30 min", cuisine: "Fried Chicken", image: "images/kfc.png", open: true },
+      { id: 3, name: "Waakye Joint", rating: 4.9, time: "15-25 min", cuisine: "Local", image: "images/waakye-logo.png", open: true },
+      { id: 4, name: "Pizza Inn", rating: 4.5, time: "30-40 min", cuisine: "Pizza", image: "images/pizza-inn.png", open: true },
+      { id: 5, name: "Burger King", rating: 4.7, time: "25-35 min", cuisine: "Burgers", image: "images/burger-king.png", open: true }
+    ];
+
+    const menus = {
+      1: [{ name: "Jollof Rice + Chicken", price: 35, image: "images/jollof.jpg" }, { name: "Banku & Tilapia", price: 45, image: "images/banku.jpg" }],
+      2: [{ name: "Zinger Burger Combo", price: 38, image: "images/zinger.jpg" }, { name: "6pc Chicken Bucket", price: 85, image: "images/bucket.jpg" }],
+      3: [{ name: "Waakye + Add-Ons", price: 6, image: "images/waakye.jpg", addOns: true }],
+      4: [{ name: "Margherita Pizza", price: 55, image: "images/margherita.jpg" }, { name: "Pepperoni Pizza", price: 65, image: "images/pepperoni.jpg" }],
+      5: [{ name: "Whopper Meal", price: 40, image: "images/whopper.jpg" }, { name: "Cheeseburger", price: 25, image: "images/cheeseburger.jpg" }]
+    };
+
+    function renderRestaurants() {
+      const container = document.getElementById('restaurants');
+      const query = document.getElementById('search').value.toLowerCase();
+      const filtered = restaurants.filter(r => (r.name.toLowerCase().includes(query) || r.cuisine.toLowerCase().includes(query)) && r.open);
+      container.innerHTML = filtered.map(r => `
+        <div class="card-hover transition-all duration-300 bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden flex flex-col">
+          <div class="restaurant-img-container">
+            <img src="${r.image}" alt="${r.name}" class="restaurant-img" onerror="this.src='https://via.placeholder.com/260x180?text=Logo'">
+          </div>
+          <div class="p-6 pt-4 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="text-xl font-bold text-gray-800 dark:text-white text-center">${r.name}</h3>
+              <div class="flex items-center justify-center gap-1 my-2">
+                <span class="text-yellow-500">★★★★★</span>
+                <span class="ml-1 text-sm font-medium sky-blue">${r.rating}</span>
+                <span class="ml-3 bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded-full">Open Now</span>
+              </div>
+              <p class="text-gray-600 dark:text-gray-400 text-center">${r.cuisine} • ${r.time}</p>
+            </div>
+            <button onclick="openMenu(${r.id})" class="mt-4 w-full btn-blue">View Menu</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openMenu(id) {
+      const r = restaurants.find(x => x.id === id);
+      const menu = menus[id];
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4';
+      modal.innerHTML = `
+        <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-4xl w-full max-h-screen overflow-y-auto p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-gray-800 dark:text-white">${r.name}</h3>
+            <button onclick="this.closest('.fixed').remove()" class="text-3xl text-gray-500 hover:text-gray-800 dark:hover:text-white">X</button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            ${menu.map(item => `
+              <div class="border rounded-xl overflow-hidden card-hover border-gray-200 dark:border-gray-600">
+                <img src="${item.image}" alt="${item.name}" class="w-full food-img" onerror="this.src='https://via.placeholder.com/300x200?text=Food'">
+                <div class="p-4">
+                  <h4 class="font-semibold text-lg text-gray-800 dark:text-white">${item.name}</h4>
+                  <p class="sky-blue font-bold text-xl">GH₵${item.price}</p>
+                  ${item.addOns ? `
+                    <div class="mt-2 space-y-2">
+                      <label class="block text-sm text-gray-600 dark:text-gray-400">Eggs (GH₵3 each):</label>
+                      <select id="eggs-${id}" class="w-full p-2 border rounded dark:bg-gray-700"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+                      <label class="block text-sm text-gray-600 dark:text-gray-400">Spaghetti (GH₵2):</label>
+                      <select id="spaghetti-${id}" class="w-full p-2 border rounded dark:bg-gray-700"><option value="0">0</option><option value="1">1</option><option value="2">2</option></select>
+                      <label class="block text-sm text-gray-600 dark:text-gray-400">Plantain (GH₵1.5):</label>
+                      <select id="plantain-${id}" class="w-full p-2 border rounded dark:bg-gray-700"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>
+                      <label class="block text-sm text-gray-600 dark:text-gray-400">Fish (+GH₵5):</label>
+                      <select id="fish-${id}" class="w-full p-2 border rounded dark:bg-gray-700"><option value="0">No</option><option value="5">Yes</option></select>
+                      <p class="sky-blue font-bold text-lg mt-2" id="waakye-total-${id}">Total: GH₵6</p>
+                    </div>
+                  ` : ''}
+                  <button onclick="addToCart('${item.name}', calculatePrice(${id}, ${item.price}, ${item.addOns ? 'true' : 'false'}), '${r.name}', ${item.addOns ? 'getAddOns(' + id + ')' : 'null'})" 
+                          class="mt-3 w-full bg-sky-blue text-white py-2 rounded-lg font-medium hover:bg-blue-600">
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      if (menu[0] && menu[0].addOns) {
+        ['eggs', 'spaghetti', 'plantain', 'fish'].forEach(a => {
+          document.getElementById(`${a}-${id}`).addEventListener('change', () => updateWaakyeTotal(id));
+        });
+        updateWaakyeTotal(id);
+      }
+    }
+
+    function updateWaakyeTotal(id) {
+      const eggs = parseInt(document.getElementById(`eggs-${id}`).value) * 3;
+      const spaghetti = parseInt(document.getElementById(`spaghetti-${id}`).value) * 2;
+      const plantain = parseFloat(document.getElementById(`plantain-${id}`).value) * 1.5;
+      const fish = parseInt(document.getElementById(`fish-${id}`).value);
+      const total = 6 + eggs + spaghetti + plantain + fish;
+      document.getElementById(`waakye-total-${id}`).textContent = `Total: GH₵${total.toFixed(2)}`;
+    }
+
+    function getAddOns(id) {
+      return {
+        eggs: parseInt(document.getElementById(`eggs-${id}`).value),
+        spaghetti: parseInt(document.getElementById(`spaghetti-${id}`).value),
+        plantain: parseInt(document.getElementById(`plantain-${id}`).value),
+        fish: document.getElementById(`fish-${id}`).value === '5' ? 1 : 0
+      };
+    }
+
+    function calculatePrice(id, basePrice, isAddOns) {
+      if (!isAddOns) return basePrice;
+      const eggs = parseInt(document.getElementById(`eggs-${id}`).value) * 3;
+      const spaghetti = parseInt(document.getElementById(`spaghetti-${id}`).value) * 2;
+      const plantain = parseFloat(document.getElementById(`plantain-${id}`).value) * 1.5;
+      const fish = parseInt(document.getElementById(`fish-${id}`).value);
+      return basePrice + eggs + spaghetti + plantain + fish;
+    }
+
+    function addToCart(name, price, restaurant, addOns = null) {
+      const item = { name, price: parseFloat(price.toFixed(2)), restaurant };
+      if (addOns) {
+        item.addOns = addOns;
+        item.name += (addOns.eggs ? ` + ${addOns.eggs} Eggs` : '') +
+                     (addOns.spaghetti ? ` + ${addOns.spaghetti} Spaghetti` : '') +
+                     (addOns.plantain ? ` + ${addOns.plantain} Plantain` : '') +
+                     (addOns.fish ? ` + Fish` : '');
+      }
+      cart.push(item);
+      updateCart();
+
+      // FLY ANIMATION
+      const cartBtn = document.querySelector('.cart-btn');
+      const rect = cartBtn.getBoundingClientRect();
+      const fly = document.createElement('div');
+      fly.className = 'fly-item';
+      fly.innerHTML = 'Food';
+      fly.style.left = (event.clientX - 20) + 'px';
+      fly.style.top = (event.clientY - 20) + 'px';
+      fly.style.setProperty('--tx', (rect.left + 35 - event.clientX) + 'px');
+      fly.style.setProperty('--ty', (rect.top + 35 - event.clientY) + 'px');
+      document.body.appendChild(fly);
+      setTimeout(() => fly.remove(), 1000);
+
+      alert(`"${item.name}" added to cart!`);
+    }
+
+    function updateCart() {
+      const items = document.getElementById('cartItems');
+      const subtotal = cart.reduce((a, b) => a + b.price, 0).toFixed(2);
+      const total = (parseFloat(subtotal) + serviceFee + deliveryFee - promoDiscount).toFixed(2);
+      document.getElementById('subtotal').textContent = `GH₵${subtotal}`;
+      document.getElementById('total').textContent = `GH₵${total}`;
+      document.getElementById('cartCount').textContent = cart.length;
+
+      items.innerHTML = cart.length ? cart.map((item, i) => `
+        <div class="flex justify-between items-center border-b pb-3 mb-3 border-gray-200 dark:border-gray-600">
+          <div>
+            <p class="font-medium text-gray-800 dark:text-white">${item.name}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">${item.restaurant}</p>
+          </div>
+          <div class="text-right">
+            <p class="font-bold text-gray-800 dark:text-white">GH₵${item.price.toFixed(2)}</p>
+            <button onclick="cart.splice(${i},1); updateCart()" class="text-red-500 text-sm hover:underline">Remove</button>
+          </div>
+        </div>
+      `).join('') : '<p class="text-center text-gray-500 dark:text-gray-400">Your cart is empty</p>';
+    }
+
+    function applyPromo() {
+      const code = document.getElementById('promoCode').value.trim().toUpperCase();
+      if (code === 'NEXTO5' || code === 'FREEDELIVERY') {
+        promoDiscount = 5;
+        alert('Promo applied! GH₵5 off');
+      } else {
+        promoDiscount = 0;
+        alert('Invalid promo code');
+      }
+      updateCart();
+    }
+
+    function toggleCart() {
+      document.getElementById('cartSidebar').classList.toggle('open');
+    }
+
+    function showCheckout() {
+      if (!cart.length) return alert('Your cart is empty!');
+      document.getElementById('checkoutModal').classList.remove('hidden');
+      toggleCart();
+    }
+
+    function hideCheckout() {
+      document.getElementById('checkoutModal').classList.add('hidden');
+    }
+
+    async function placeOrder() {
+      const btn = document.getElementById('placeOrderBtn');
+      btn.disabled = true;
+      btn.textContent = "Placing...";
+
+      const name = document.getElementById('name').value.trim();
+      const rawPhone = document.getElementById('phone').value.trim();
+      const address = document.getElementById('address').value.trim();
+
+      if (!name || !rawPhone || !address) {
+        alert('Please fill all fields!');
+        btn.disabled = false;
+        btn.textContent = "Place Order";
+        return;
+      }
+
+      const phone = rawPhone.replace(/[^\d]/g, '').slice(-10);
+      const details = cart.map(c => `${c.name} (GH₵${c.price.toFixed(2)})`).join(' | ');
+      const total = cart.reduce((a, b) => a + b.price, 0);
+
+      try {
+        const res = await fetch(`${API}/orders`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            name, details, address, phone,
+            restaurant: cart[0].restaurant, 
+            cartTotal: total + 7
+          })
+        });
+
+        if (!res.ok) throw new Error('Failed');
+        const orderData = await res.json();
+
+        document.getElementById('confirmId').textContent = orderData.id;
+        document.getElementById('confirmation').classList.remove('hidden');
+        cart = [];
+        promoDiscount = 0;
+        updateCart();
+        hideCheckout();
+
+      } catch (err) {
+        alert('Order failed. Check internet or try again.');
+        console.error(err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Place Order";
+      }
+    }
+
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+    }
+
+    window.addEventListener('scroll', () => {
+      document.querySelector('.back-to-top').classList.toggle('visible', window.scrollY > 500);
+    });
+
+    if (localStorage.getItem('darkMode') === 'true') document.documentElement.classList.add('dark');
+    document.getElementById('search').addEventListener('input', renderRestaurants);
+    renderRestaurants();
+  </script>
+</body>
+</html>
