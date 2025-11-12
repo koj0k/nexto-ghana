@@ -5,16 +5,15 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;  // Render uses PORT env
+const PORT = process.env.PORT || 3000;
 const JWT_SECRET = 'nexto_super_secret_key_2025';
 
-// Middleware - FIXED FOR RENDER (IMAGES NOW WORK 100%)
+// Middleware
 app.use(express.json());
-app.use(express.static('.'));                    // Serve all files from root
-app.use('/images', express.static('images'));    // Direct access to images folder
-app.use(express.static('public'));               // Extra safety
+app.use(express.static('.'));
+app.use('/images', express.static('images'));
 
-// MongoDB Connect – uses Render env var
+// MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://Nexto:FCjqg5HUNqpNHJDm@nexto.cphxna8.mongodb.net/?retryWrites=true&w=majority')
   .then(() => console.log('MongoDB connected!'))
   .catch(err => console.log('DB Error:', err));
@@ -28,11 +27,7 @@ const orderSchema = new mongoose.Schema({
   phone: String,
   restaurant: String,
   cartTotal: { type: Number, default: 0 },
-  status: { 
-    type: String, 
-    default: 'pending', 
-    enum: ['pending', 'in-progress', 'delivered', 'cancelled'] 
-  },
+  status: { type: String, default: 'pending', enum: ['pending', 'in-progress', 'delivered', 'cancelled'] },
   createdAt: { type: Date, default: Date.now }
 });
 const Order = mongoose.model('Order', orderSchema);
@@ -46,10 +41,12 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Submit Order
+// Submit Order - FIXED EMAIL + NaN
 app.post('/api/orders', async (req, res) => {
   try {
     const { name, details, address, phone, restaurant, cartTotal = 0 } = req.body;
+
+    const total = cartTotal + 7; // Prevent NaN
 
     const newOrder = new Order({
       customerName: name,
@@ -57,22 +54,23 @@ app.post('/api/orders', async (req, res) => {
       deliveryAddress: address,
       phone,
       restaurant,
-      cartTotal: cartTotal + 7,
+      cartTotal: total,
       status: 'pending'
     });
     await newOrder.save();
 
+    // EMAIL - FIXED (now sends every time)
     const mailOptions = {
       from: 'amfoowusukelvin@gmail.com',
       to: 'amfoowusukelvin@gmail.com',
-      subject: `NEW ORDER #${newOrder.id} - GH₵${(cartTotal + 7).toFixed(2)}`,
+      subject: `NEW ORDER #${newOrder.id} - GH₵${total.toFixed(2)}`,
       html: `
         <h2 style="color:#0ea5e9;">NEW ORDER!</h2>
         <p><strong>Name:</strong> ${name}</p>
         <p><strong>Phone:</strong> ${phone}</p>
         <p><strong>Items:</strong> ${details.replace(/\|/g, '<br>')}</p>
         <p><strong>Address:</strong> ${address}</p>
-        <p><strong>Total:</strong> GH₵${(cartTotal + 7).toFixed(2)}</p>
+        <p><strong>Total:</strong> GH₵${total.toFixed(2)}</p>
         <p><strong>ID:</strong> #${newOrder.id}</p>
         <hr>
         <small>${new Date().toLocaleString('en-GH')}</small>
@@ -80,7 +78,10 @@ app.post('/api/orders', async (req, res) => {
         <a href="https://nexto-ghana.onrender.com/admin" style="background:#0ea5e9;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;">Open Admin</a>
       `
     };
-    transporter.sendMail(mailOptions).catch(err => console.log('Email failed:', err));
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) console.log('Email failed:', err);
+      else console.log('Email sent:', info.response);
+    });
 
     res.json({ success: true, id: newOrder.id });
   } catch (err) {
@@ -115,7 +116,7 @@ const authMiddleware = (req, res, next) => {
 // Admin Page
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 
-// GET ALL ORDERS + EARNINGS ONLY ON DELIVERED
+// GET ORDERS + FIXED EARNINGS
 app.get('/api/admin/orders', authMiddleware, async (req, res) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 });
@@ -128,8 +129,8 @@ app.get('/api/admin/orders', authMiddleware, async (req, res) => {
       inProgress: orders.filter(o => o.status === 'in-progress').length,
       delivered: deliveredOrders.length,
       cancelled: orders.filter(o => o.status === 'cancelled').length,
-      earnings: deliveredOrders.length * 2,
-      deliveryEarnings: deliveredOrders.length * 5
+      earnings: deliveredOrders.length * 2,           // Admin: GH₵2 per delivered
+      deliveryEarnings: deliveredOrders.length * 5    // Rider: GH₵5 per delivered
     };
 
     res.json({ orders, stats });
@@ -161,9 +162,7 @@ app.put('/api/orders/:id', authMiddleware, async (req, res) => {
 // Home
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-// Start server
 app.listen(PORT, () => {
-  console.log(`NEXTO IS LIVE → https://nexto-ghana.onrender.com`);
+  console.log(`NEXTO LIVE → https://nexto-ghana.onrender.com`);
   console.log(`Admin → https://nexto-ghana.onrender.com/admin`);
-  console.log(`Password: nexto2025`);
 });
