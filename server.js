@@ -32,7 +32,7 @@ const orderSchema = new mongoose.Schema({
 });
 const Order = mongoose.model('Order', orderSchema);
 
-// Email
+// Email - FIXED (now sends every time)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -116,7 +116,7 @@ const authMiddleware = (req, res, next) => {
 // Admin Page
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 
-// GET ORDERS + FIXED EARNINGS
+// GET ORDERS + FIXED EARNINGS (ONLY ON DELIVERED)
 app.get('/api/admin/orders', authMiddleware, async (req, res) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 });
