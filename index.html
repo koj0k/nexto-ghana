@@ -9,8 +9,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link rel="stylesheet" href="style.css"/>
   <!-- FAVICONS -->
-  <link rel="icon" href="images/nexto-logo.jpg" type="image/jpeg">
-  <link rel="apple-touch-icon" href="images/nexto-logo.jpg">
+  <link rel="icon" href="nexto-logo.jpg" type="image/jpeg">
+  <link rel="apple-touch-icon" href="nexto-logo.jpg">
   <style>
     :root { --sky-blue: #0ea5e9; --dark-bg: #0f172a; --dark-card: #1e293b; }
     .sky-blue { color: var(--sky-blue); }
@@ -113,7 +113,7 @@
   <!-- HERO -->
   <section class="hero">
     <div class="absolute top-6 left-6 z-10">
-      <img src="images/nexto-logo.jpg" alt="Nexto Logo" class="w-40 h-40 drop-shadow-2xl">
+      <img src="nexto-logo.jpg" alt="Nexto Logo" class="w-40 h-40 drop-shadow-2xl">
     </div>
     <div class="px-6">
       <h1 class="text-5xl md:text-7xl font-bold mb-4 drop-shadow-lg">Nexto</h1>
@@ -137,14 +137,14 @@
       <p class="text-xl mb-2">Your Order ID: <span id="confirmId" class="font-bold sky-blue"></span></p>
       <p class="text-lg mb-6">We'll call you soon. Estimated delivery: 25-40 mins</p>
       <div class="w-32 h-32 mx-auto mb-6">
-        <img src="images/delivery-bike.gif" alt="Rider coming" class="w-full h-full object-contain">
+        <img src="delivery-bike.gif" alt="Rider coming" class="w-full h-full object-contain">
       </div>
       <button onclick="document.getElementById('confirmation').classList.add('hidden')" 
               class="btn-blue text-lg px-12 py-4">Continue Browsing</button>
     </div>
   </div>
 
-  <!-- FOOTER -->
+  <!-- FOOTER   
   <footer class="footer">
     <div class="container mx-auto px-4 text-center">
       <p class="text-gray-400 mb-4 text-lg font-medium">Get in Touch</p>
@@ -218,19 +218,19 @@
     let promoDiscount = 0;
 
     const restaurants = [
-      { id: 1, name: "Papaye Fast Food", rating: 4.8, time: "25-35 min", cuisine: "Ghanaian", image: "images/papaye.png", open: true },
-      { id: 2, name: "KFC Osu", rating: 4.6, time: "20-30 min", cuisine: "Fried Chicken", image: "images/kfc.png", open: true },
-      { id: 3, name: "Waakye Joint", rating: 4.9, time: "15-25 min", cuisine: "Local", image: "images/waakye-logo.png", open: true },
-      { id: 4, name: "Pizza Inn", rating: 4.5, time: "30-40 min", cuisine: "Pizza", image: "images/pizza-inn.png", open: true },
-      { id: 5, name: "Burger King", rating: 4.7, time: "25-35 min", cuisine: "Burgers", image: "images/burger-king.png", open: true }
+      { id: 1, name: "Papaye Fast Food", rating: 4.8, time: "25-35 min", cuisine: "Ghanaian", image: "papaye.png", open: true },
+      { id: 2, name: "KFC Osu", rating: 4.6, time: "20-30 min", cuisine: "Fried Chicken", image: "kfc.png", open: true },
+      { id: 3, name: "Waakye Joint", rating: 4.9, time: "15-25 min", cuisine: "Local", image: "waakye-logo.png", open: true },
+      { id: 4, name: "Pizza Inn", rating: 4.5, time: "30-40 min", cuisine: "Pizza", image: "pizza-inn.png", open: true },
+      { id: 5, name: "Burger King", rating: 4.7, time: "25-35 min", cuisine: "Burgers", image: "burger-king.png", open: true }
     ];
 
     const menus = {
-      1: [{ name: "Jollof Rice + Chicken", price: 35, image: "images/jollof.jpg" }, { name: "Banku & Tilapia", price: 45, image: "images/banku.jpg" }],
-      2: [{ name: "Zinger Burger Combo", price: 38, image: "images/zinger.jpg" }, { name: "6pc Chicken Bucket", price: 85, image: "images/bucket.jpg" }],
-      3: [{ name: "Waakye + Add-Ons", price: 6, image: "images/waakye.jpg", addOns: true }],
-      4: [{ name: "Margherita Pizza", price: 55, image: "images/margherita.jpg" }, { name: "Pepperoni Pizza", price: 65, image: "images/pepperoni.jpg" }],
-      5: [{ name: "Whopper Meal", price: 40, image: "images/whopper.jpg" }, { name: "Cheeseburger", price: 25, image: "images/cheeseburger.jpg" }]
+      1: [{ name: "Jollof Rice + Chicken", price: 35, image: "jollof.jpg" }, { name: "Banku & Tilapia", price: 45, image: "banku.jpg" }],
+      2: [{ name: "Zinger Burger Combo", price: 38, image: "zinger.jpg" }, { name: "6pc Chicken Bucket", price: 85, image: "bucket.jpg" }],
+      3: [{ name: "Waakye + Add-Ons", price: 6, image: "waakye.jpg", addOns: true }],
+      4: [{ name: "Margherita Pizza", price: 55, image: "margherita.jpg" }, { name: "Pepperoni Pizza", price: 65, image: "pepperoni.jpg" }],
+      5: [{ name: "Whopper Meal", price: 40, image: "whopper.jpg" }, { name: "Cheeseburger", price: 25, image: "cheeseburger.jpg" }]
     };
 
     function renderRestaurants() {
