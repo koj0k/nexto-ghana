@@ -3,497 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Nexto Admin Dashboard</title>
+  <title>Nexto Admin Dashboard</1title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="icon" href="nexto-logo.jpg" type="image/jpeg">
   <style>
-    :root {
-      --primary: #0ea5e9;     /* Sky Blue */
-      --accent: #f59e0b;      
-      --dark: #1f2937;
-      --light: #f9fafb;
-      --gray: #6b7280;
-      --success: #059669;     
-      --danger: #dc2626;
-      --light-blue: #e0f2fe;
-      --white: #ffffff;
-    }
-
+    :root { --primary: #0ea5e9; --light-blue: #e0f2fe; --white: #ffffff; --gray: #6b7280; --dark: #1f2937; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { 
-      font-family: 'Inter', sans-serif; 
-      background: var(--light-blue); 
-      color: var(--dark); 
-      line-height: 1.7;
-    }
-
-    /* HERO SECTION */
-    .hero {
-      background: linear-gradient(135deg, var(--primary), #0284c7);
-      color: var(--white);
-      padding: 3rem 2rem;
-      position: relative;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(14, 165, 233, 0.2);
-    }
-    .hero .logo {
-      position: absolute;
-      top: 1.5rem;
-      left: 2rem;
-      width: 110px;
-      height: 110px;
-      border-radius: 50%;
-      object-fit: contain;
-      background: var(--white);
-      padding: 10px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    }
-    .hero h1 {
-      font-size: 3rem;
-      font-weight: 800;
-      margin-bottom: 0.5rem;
-      text-shadow: 0 3px 8px rgba(0,0,0,0.3);
-    }
-    .hero p {
-      font-size: 1.3rem;
-      opacity: 0.95;
-    }
-
-    /* LOGIN */
-    .login-container {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-    }
-    .login-box {
-      background: var(--white);
-      padding: 3rem 2.5rem;
-      border-radius: 20px;
-      box-shadow: 0 20px 50px rgba(14, 165, 233, 0.15);
-      width: 100%;
-      max-width: 420px;
-      text-align: center;
-    }
-    .login-box h2 {
-      font-size: 2rem;
-      color: var(--primary);
-      margin-bottom: 1.5rem;
-      font-weight: 700;
-    }
-    .login-box input {
-      width: 100%;
-      padding: 1rem 1.2rem;
-      margin: 1rem 0;
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      transition: border 0.3s;
-    }
-    .login-box input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
-    }
-    .login-box button {
-      background: var(--primary);
-      color: var(--white);
-      padding: 1rem;
-      border: none;
-      border-radius: 12px;
-      width: 100%;
-      font-size: 1.1rem;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 1rem;
-      transition: 0.3s;
-    }
-    .login-box button:hover {
-      background: #0284c7;
-      transform: translateY(-2px);
-    }
-
-    /* DASHBOARD */
-    .dashboard {
-      display: none;
-      min-height: 100vh;
-      padding: 2rem;
-      background: var(--light-blue);
-    }
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-    .header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-    .header h1 {
-      font-size: 2.8rem;
-      color: var(--primary);
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-    .header p {
-      color: var(--gray);
-      font-size: 1.1rem;
-    }
-
-    /* Stats Grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 2rem;
-      margin-bottom: 4rem;
-    }
-    .stat-card {
-      background: var(--white);
-      padding: 2rem;
-      border-radius: 18px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-      text-align: center;
-      transition: transform 0.3s;
-    }
-    .stat-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 15px 35px rgba(14, 165, 233, 0.1);
-    }
-    .stat-number {
-      font-size: 2.8rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
-    }
-    .stat-label {
-      font-size: 1rem;
-      color: var(--gray);
-      font-weight: 500;
-    }
-
-    /* CHART */
-    .chart-section {
-      background: var(--white);
-      padding: 2rem;
-      border-radius: 18px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-      margin-bottom: 4rem;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .chart-title {
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: var(--dark);
-      margin-bottom: 1.2rem;
-      text-align: center;
-    }
-    .chart-container {
-      position: relative;
-      height: 220px;
-      width: 100%;
-    }
-
-    /* Table */
-    .table-container {
-      background: var(--white);
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-      margin-bottom: 2rem;
-    }
-    .table-wrapper {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 900px;
-    }
-    th {
-      background: var(--primary);
-      color: var(--white);
-      padding: 1.5rem 1rem;
-      text-align: left;
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
-    td {
-      padding: 1.2rem 1rem;
-      border-bottom: 1px solid #f1f5f9;
-      font-size: 0.95rem;
-      vertical-align: top;
-    }
-    tr:hover {
-      background: #f8fafc;
-    }
-    .status {
-      padding: 0.5rem 1rem;
-      border-radius: 50px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: capitalize;
-      display: inline-block;
-    }
+    body { font-family: 'Inter', sans-serif; background: var(--light-blue); color: var(--dark); line-height: 1.7; }
+    .hero { background: linear-gradient(135deg, var(--primary), #0284c7); color: white; padding: 3rem 2rem; text-align: center; position: relative; }
+    .hero .logo { position: absolute; top: 1.5rem; left: 2rem; width: 110px; height: 110px; border-radius: 50%; background: white; padding: 10px; box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
+    .hero h1 { font-size: 3rem; font-weight: 800; }
+    .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); }
+    .login-box { background: white; padding: 3rem 2.5rem; border-radius: 20px; box-shadow: 0 20px 50px rgba(14,165,233,0.15); max-width: 420px; width: 100%; text-align: center; }
+    .login-box input { width: 100%; padding: 1rem; margin: 1rem 0; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1.1rem; }
+    .login-box button { background: var(--primary); color: white; padding: 1rem; border: none; border-radius: 12px; width: 100%; font-size: 1.1rem; font-weight: 600; cursor: pointer; }
+    .dashboard { display: none; min-height: 100vh; padding: 2rem; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 4rem; }
+    .stat-card { background: white; padding: 2rem; border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; }
+    .stat-number { font-size: 2.8rem; font-weight: 700; color: var(--primary); }
+    .chart-section { background: white; padding: 2rem; border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 500px; margin: 0 auto 4rem; }
+    .table-container { background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    table { width: 100%; border-collapse: collapse; min-width: 900px; }
+    th { background: var(--primary); color: white; padding: 1.5rem 1rem; text-align: left; }
+    td { padding: 1.2rem 1rem; border-bottom: 1px solid #f1f5f9; }
+    .status { padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.8rem; font-weight: 600; text-transform: capitalize; display: inline-block; }
     .pending { background: #fffbeb; color: #92400e; }
     .in-progress { background: #dbeafe; color: #1e40af; }
     .delivered { background: #d1fae5; color: #065f46; }
     .cancelled { background: #fee2e2; color: #991b1b; }
-
-    .btn-group {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-    .btn {
-      padding: 0.5rem 0.9rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .btn-pending { background: #f59e0b; color: var(--white); }
-    .btn-progress { background: #3b82f6; color: var(--white); }
-    .btn-delivered { background: #10b981; color: var(--white); }
-    .btn-cancel { background: #ef4444; color: var(--white); }
-    .btn:hover { transform: scale(1.05); }
-
-    /* RESTAURANT MANAGEMENT */
-    .restaurant-management {
-      background: var(--white);
-      border-radius: 18px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    }
-    .restaurant-management h3 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--dark);
-      margin-bottom: 1.5rem;
-    }
-    .restaurant-toggle {
-      display: grid;
-      gap: 1rem;
-    }
-    .restaurant-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem;
-      background: #f8fafc;
-      border-radius: 12px;
-      transition: all 0.3s;
-    }
-    .restaurant-item:hover {
-      background: #f1f5f9;
-      transform: translateX(4px);
-    }
-    .restaurant-info h4 {
-      font-weight: 600;
-      color: var(--dark);
-    }
-    .restaurant-info p {
-      color: var(--gray);
-      font-size: 0.9rem;
-    }
-    .toggle-switch {
-      position: relative;
-      width: 50px;
-      height: 26px;
-    }
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #cbd5e1;
-      transition: .4s;
-      border-radius: 26px;
-    }
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 20px;
-      width: 20px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .4s;
-      border-radius: 50%;
-    }
-    input:checked + .slider {
-      background-color: var(--success);
-    }
-    input:checked + .slider:before {
-      transform: translateX(24px);
-    }
-
-    @media (max-width: 768px) {
-      .hero h1 { font-size: 2.8rem; }
-      .stats-grid { grid-template-columns: 1fr 1fr; }
-      .stat-number { font-size: 2.2rem !important; }
-      .chart-section { padding: 2rem 1rem; }
-      th, td { padding: 1rem 0.6rem; font-size: 0.9rem; }
-      .btn-group { justify-content: center; }
-    }
+    .btn { padding: 0.5rem 0.9rem; border: none; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+    .btn-pending { background: #f59e0b; color: white; }
+    .btn-progress { background: #3b82f6; color: white; }
+    .btn-delivered { background: #10b981; color: white; }
+    .btn-cancel { background: #ef4444; color: white; }
+    .btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
   </style>
 </head>
 <body>
 
-  <!-- LOGIN -->
   <div id="login" class="login-container">
     <div class="login-box">
       <h2>Nexto Admin</h2>
-      <p>Enter your secure password to access the dashboard</p>
+      <p>Enter your secure password</p>
       <input type="password" id="password" placeholder="Password" />
-      <button onclick="login()">LOGIN SECURELY</button>
+      <button onclick="login()">LOGIN</button>
     </div>
   </div>
 
-  <!-- DASHBOARD -->
   <div id="dashboard" class="dashboard">
     <div class="hero">
       <img src="nexto-logo.jpg" alt="Nexto" class="logo">
       <h1>Nexto Admin Panel</h1>
-      <p>Real-time orders • Earnings • Delivery management</p>
+      <p>Real-time orders • Earnings • Delivery</p>
     </div>
-
-    <div class="container">
-      <!-- Stats -->
+    <div class="container max-w-6xl mx-auto px-4">
       <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon">Shopping Bag</div>
-          <div id="totalOrders" class="stat-number">0</div>
-          <div class="stat-label">Total Orders</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">Clock</div>
-          <div id="pending" class="stat-number">0</div>
-          <div class="stat-label">Pending</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">Truck</div>
-          <div id="inProgress" class="stat-number">0</div>
-          <div class="stat-label">In Progress</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">Check Circle</div>
-          <div id="delivered" class="stat-number">0</div>
-          <div class="stat-label">Delivered</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">Ban</div>
-          <div id="cancelled" class="stat-number">0</div>
-          <div class="stat-label">Cancelled</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">GH₵</div>
-          <div id="adminEarnings" class="stat-number">GH₵0.00</div>
-          <div class="stat-label">Admin Earnings (GH₵2 per order)</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">Motorcycle</div>
-          <div id="deliveryEarnings" class="stat-number">GH₵0.00</div>
-          <div class="stat-label">Delivery Earnings (GH₵5 per delivery)</div>
-        </div>
+        <div class="stat-card"><div id="totalOrders" class="stat-number">0</div><div>Total Orders</div></div>
+        <div class="stat-card"><div id="pending" class="stat-number">0</div><div>Pending</div></div>
+        <div class="stat-card"><div id="inProgress" class="stat-number">0</div><div>In Progress</div></div>
+        <div class="stat-card"><div id="delivered" class="stat-number">0</div><div>Delivered</div></div>
+        <div class="stat-card"><div id="cancelled" class="stat-number">0</div><div>Cancelled</div></div>
+        <div class="stat-card"><div id="adminEarnings" class="stat-number">GH₵0.00</div><div>Admin Earnings</div></div>
+        <div class="stat-card"><div id="deliveryEarnings" class="stat-number">GH₵0.00</div><div>Rider Earnings</div></div>
       </div>
-
-      <!-- Chart -->
       <div class="chart-section">
-        <h3 class="chart-title">Order Status Overview</h3>
-        <div style="height: 300px;">
-          <canvas id="statusChart"></canvas>
-        </div>
+        <canvas id="statusChart"></canvas>
       </div>
-
-      <!-- RESTAURANT MANAGEMENT -->
-      <div class="restaurant-management">
-        <h3>Restaurant Management</h3>
-        <div class="restaurant-toggle">
-          <div class="restaurant-item">
-            <div class="restaurant-info">
-              <h4>Papaye Fast Food</h4>
-              <p>Ghanaian cuisine</p>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" checked onchange="toggleRestaurant('papaye', this.checked)">
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="restaurant-item">
-            <div class="restaurant-info">
-              <h4>KFC Osu</h4>
-              <p>Fried Chicken</p>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" checked onchange="toggleRestaurant('kfc', this.checked)">
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="restaurant-item">
-            <div class="restaurant-info">
-              <h4>Waakye Joint</h4>
-              <p>Local</p>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" checked onchange="toggleRestaurant('waakye', this.checked)">
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="restaurant-item">
-            <div class="restaurant-info">
-              <h4>Pizza Inn</h4>
-              <p>Pizza</p>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" checked onchange="toggleRestaurant('pizza', this.checked)">
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="restaurant-item">
-            <div class="restaurant-info">
-              <h4>Burger King</h4>
-              <p>Burgers</p>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" checked onchange="toggleRestaurant('burger', this.checked)">
-              <span class="slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <!-- Orders Table -->
       <div class="table-container">
-        <div class="table-wrapper">
+        <div style="overflow-x:auto;">
           <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Customer</th>
-                <th>Restaurant</th>
-                <th>Order Details (Full)</th>
-                <th>Address</th>
-                <th>Phone</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
+            <thead><tr>
+              <th>ID</th><th>Customer</th><th>Restaurant</th><th>Details</th><th>Address</th><th>Phone</th><th>Total</th><th>Status</th><th>Actions</th>
+            </tr></thead>
             <tbody id="ordersTable"></tbody>
           </table>
         </div>
@@ -502,129 +84,66 @@
   </div>
 
   <script>
-    const API = '/api';
-    let token = localStorage.getItem('nextoToken') || '';
-    let statusChart = null;
-
-    if (token) {
-      document.getElementById('login').style.display = 'none';
-      document.getElementById('dashboard').style.display = 'block';
-      loadData();
-    }
+    const API = '/api'; let token = localStorage.getItem('nextoToken') || ''; let chart = null;
+    if (token) { document.getElementById('login').style.display = 'none'; document.getElementById('dashboard').style.display = 'block'; loadData(); }
 
     async function login() {
       const pass = document.getElementById('password').value.trim();
-      if (!pass) return alert('Enter password!');
-
-      const res = await fetch(`${API}/admin/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: pass })
-      });
+      if (!pass) return alert('Enter password');
+      const res = await fetch(`${API}/admin/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pass }) });
       const data = await res.json();
-
       if (data.token) {
-        token = data.token;
-        localStorage.setItem('nextoToken', token);
-        document.getElementById('login').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
-        loadData();
-      } else {
-        alert('Wrong password! Try: nexto2025');
-      }
+        token = data.token; localStorage.setItem('nextoToken', token);
+        document.getElementById('login').style.display = 'none'; document.getElementById('dashboard').style.display = 'block'; loadData();
+      } else alert('Wrong password! Use: nexto2025');
     }
 
     async function loadData() {
-      const res = await fetch(`${API}/admin/orders`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      if (!res.ok) {
-        alert('Session expired. Please login again.');
-        localStorage.removeItem('nextoToken');
-        location.reload();
-        return;
-      }
-
+      const res = await fetch(`${API}/admin/orders`, { headers: { Authorization: `Bearer ${token}` } });
+      if (!res.ok) { alert('Session expired'); localStorage.removeItem('nextoToken'); location.reload(); return; }
       const { orders, stats } = await res.json();
 
-      // Update Stats
       document.getElementById('totalOrders').textContent = stats.totalOrders;
       document.getElementById('pending').textContent = stats.pending;
       document.getElementById('inProgress').textContent = stats.inProgress;
       document.getElementById('delivered').textContent = stats.delivered;
       document.getElementById('cancelled').textContent = stats.cancelled;
-      document.getElementById('adminEarnings').textContent = `GH₵${stats.serviceEarnings || 0}`;
-      document.getElementById('deliveryEarnings').textContent = `GH₵${stats.deliveryEarnings || 0}`;
+      document.getElementById('adminEarnings').textContent = `GH₵${stats.serviceEarnings || 0}.00`;
+      document.getElementById('deliveryEarnings').textContent = `GH₵${stats.deliveryEarnings || 0}.00`;
 
-      // Update Table
-      const tbody = document.getElementById('ordersTable');
-      tbody.innerHTML = orders.map(o => {
-        const fullDetails = o.orderDetails || '—';
-        return `
-          <tr>
-            <td><strong>#${o.id}</strong></td>
-            <td>${o.customerName}</td>
-            <td>${o.restaurant || '—'}</td>
-            <td style="max-width:300px; word-wrap:break-word; white-space: normal; font-size:0.9rem; line-height:1.5;">
-              ${fullDetails.replace(/\|/g, '<br>')}
-            </td>
-            <td>${o.deliveryAddress}</td>
-            <td>${o.phone}</td>
-            <td><strong>GH₵${(o.totalFood + 5 + 2).toFixed(2)}</strong></td>
-            <td><span class="status ${o.status.replace(/-/g, '')}">${o.status.replace(/-/g, ' ')}</span></td>
-            <td>
-              <div class="btn-group">
-                <button class="btn btn-pending" onclick="setStatus('${o.id}', 'pending')">Pending</button>
-                <button class="btn btn-progress" onclick="setStatus('${o.id}', 'in-progress')">Progress</button>
-                <button class="btn btn-delivered" onclick="setStatus('${o.id}', 'delivered')">Delivered</button>
-                <button class="btn btn-cancel" onclick="setStatus('${o.id}', 'cancelled')">Cancel</button>
-              </div>
-            </td>
-          </tr>
-        `;
-      }).join('');
+      document.getElementById('ordersTable').innerHTML = orders.map(o => `
+        <tr>
+          <td><strong>#${o.id}</strong></td>
+          <td>${o.customerName}</td>
+          <td>${o.restaurant || '—'}</td>
+          <td style="max-width:250px;white-space:normal;">${o.orderDetails.replace(/\|/g, '<br>')}</td>
+          <td>${o.deliveryAddress}</td>
+          <td>${o.phone}</td>
+          <td><strong>GH₵${o.cartTotal.toFixed(2)}</strong></td>
+          <td><span class="status ${o.status.replace(/-/g,'')}">${o.status.replace(/-/g,' ')}</span></td>
+          <td><div class="btn-group">
+            <button class="btn btn-pending" onclick="setStatus('${o.id}','pending')">Pending</button>
+            <button class="btn btn-progress" onclick="setStatus('${o.id}','in-progress')">Progress</button>
+            <button class="btn btn-delivered" onclick="setStatus('${o.id}','delivered')">Delivered</button>
+            <button class="btn btn-cancel" onclick="setStatus('${o.id}','cancelled')">Cancel</button>
+          </div></td>
+        </tr>
+      `).join('');
 
-      // CHART
-      if (statusChart) statusChart.destroy();
-      const ctx = document.getElementById('statusChart').getContext('2d');
-      statusChart = new Chart(ctx, {
+      if (chart) chart.destroy();
+      chart = new Chart(document.getElementById('statusChart'), {
         type: 'doughnut',
-        data: {
-          labels: ['Pending', 'In Progress', 'Delivered', 'Cancelled'],
-          datasets: [{
-            data: [stats.pending, stats.inProgress, stats.delivered, stats.cancelled],
-            backgroundColor: ['#f59e0b', '#3b82f6', '#10b981', '#ef4444'],
-            borderWidth: 3,
-            borderColor: '#fff'
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { 
-              position: 'bottom', 
-              labels: { padding: 15, font: { size: 12 } } 
-            }
-          }
-        }
+        data: { labels: ['Pending','In Progress','Delivered','Cancelled'], datasets: [{ data: [stats.pending, stats.inProgress, stats.delivered, stats.cancelled], backgroundColor: ['#f59e0b','#3b82f6','#10b981','#ef4444'] }] },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
       });
     }
 
     async function setStatus(id, status) {
-      await fetch(`${API}/orders/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ status })
-      });
+      await fetch(`${API}/orders/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ status }) });
       loadData();
     }
 
-    // Auto-refresh every 10 seconds
-    setInterval(() => {
-      if (token) loadData();
-    }, 10000);
+    setInterval(() => { if (token) loadData(); }, 10000);
   </script>
 </body>
 </html>
