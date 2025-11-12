@@ -8,17 +8,14 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = 'nexto_super_secret_key_2025';
 
-// Middleware
 app.use(express.json());
 app.use(express.static('.'));
 app.use('/images', express.static('images'));
 
-// MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://Nexto:FCjqg5HUNqpNHJDm@nexto.cphxna8.mongodb.net/?retryWrites=true&w=majority')
   .then(() => console.log('MongoDB connected!'))
   .catch(err => console.log('DB Error:', err));
 
-// Order Schema
 const orderSchema = new mongoose.Schema({
   id: { type: String, unique: true, default: () => Math.random().toString(36).substr(2, 9) },
   customerName: String,
@@ -32,7 +29,6 @@ const orderSchema = new mongoose.Schema({
 });
 const Order = mongoose.model('Order', orderSchema);
 
-// Email - FIXED (now sends every time)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -41,12 +37,10 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Submit Order - FIXED EMAIL + NaN
 app.post('/api/orders', async (req, res) => {
   try {
     const { name, details, address, phone, restaurant, cartTotal = 0 } = req.body;
-
-    const total = cartTotal + 7; // Prevent NaN
+    const total = Number(cartTotal) + 7;
 
     const newOrder = new Order({
       customerName: name,
@@ -59,9 +53,8 @@ app.post('/api/orders', async (req, res) => {
     });
     await newOrder.save();
 
-    // EMAIL - FIXED (now sends every time)
     const mailOptions = {
-      from: 'amfoowusukelvin@gmail.com',
+      from: '"Nexto Ghana" <amfoowusukelvin@gmail.com>',
       to: 'amfoowusukelvin@gmail.com',
       subject: `NEW ORDER #${newOrder.id} - GH₵${total.toFixed(2)}`,
       html: `
@@ -75,13 +68,10 @@ app.post('/api/orders', async (req, res) => {
         <hr>
         <small>${new Date().toLocaleString('en-GH')}</small>
         <br><br>
-        <a href="https://nexto-ghana.onrender.com/admin" style="background:#0ea5e9;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;">Open Admin</a>
+        <a href="https://nexto-ghana.onrender.com/admin" style="background:#0ea5e9;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;">Open Admin Panel</a>
       `
     };
-    transporter.sendMail(mailOptions, (err, info) => {
-      if (err) console.log('Email failed:', err);
-      else console.log('Email sent:', info.response);
-    });
+    transporter.sendMail(mailOptions);
 
     res.json({ success: true, id: newOrder.id });
   } catch (err) {
@@ -90,7 +80,6 @@ app.post('/api/orders', async (req, res) => {
   }
 });
 
-// Admin Login
 app.post('/api/admin/login', (req, res) => {
   const { password } = req.body;
   if (password === 'nexto2025') {
@@ -101,7 +90,6 @@ app.post('/api/admin/login', (req, res) => {
   }
 });
 
-// Auth Middleware
 const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) return res.status(401).json({ error: 'Unauthorized' });
@@ -113,14 +101,11 @@ const authMiddleware = (req, res, next) => {
   res.status(401).json({ error: 'Unauthorized' });
 };
 
-// Admin Page
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 
-// GET ORDERS + FIXED EARNINGS (ONLY ON DELIVERED)
 app.get('/api/admin/orders', authMiddleware, async (req, res) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 });
-    
     const deliveredOrders = orders.filter(o => o.status === 'delivered');
     
     const stats = {
@@ -129,8 +114,8 @@ app.get('/api/admin/orders', authMiddleware, async (req, res) => {
       inProgress: orders.filter(o => o.status === 'in-progress').length,
       delivered: deliveredOrders.length,
       cancelled: orders.filter(o => o.status === 'cancelled').length,
-      earnings: deliveredOrders.length * 2,           // Admin: GH₵2 per delivered
-      deliveryEarnings: deliveredOrders.length * 5    // Rider: GH₵5 per delivered
+      serviceEarnings: deliveredOrders.length * 2,
+      deliveryEarnings: deliveredOrders.length * 5
     };
 
     res.json({ orders, stats });
@@ -139,7 +124,6 @@ app.get('/api/admin/orders', authMiddleware, async (req, res) => {
   }
 });
 
-// Update Status
 app.put('/api/orders/:id', authMiddleware, async (req, res) => {
   try {
     const { status } = req.body;
@@ -159,7 +143,6 @@ app.put('/api/orders/:id', authMiddleware, async (req, res) => {
   }
 });
 
-// Home
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
 app.listen(PORT, () => {
