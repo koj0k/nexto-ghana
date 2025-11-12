@@ -13,12 +13,8 @@ app.use(express.json());
 app.use(express.static('.'));
 app.use('/images', express.static('images'));
 
-// MongoDB Connection
-mongoose
-  .connect(
-    process.env.MONGODB_URI ||
-      'mongodb+srv://Nexto:FCjqg5HUNqpNHJDm@nexto.cphxna8.mongodb.net/?retryWrites=true&w=majority'
-  )
+// MongoDB Connect
+mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://Nexto:FCjqg5HUNqpNHJDm@nexto.cphxna8.mongodb.net/?retryWrites=true&w=majority')
   .then(() => console.log('MongoDB connected!'))
   .catch(err => console.log('DB Error:', err));
 
@@ -31,13 +27,16 @@ const orderSchema = new mongoose.Schema({
   phone: String,
   restaurant: String,
   cartTotal: { type: Number, default: 0 },
-  status: { type: String, default: 'pending', enum: ['pending', 'in-progress', 'delivered', 'cancelled'] },
+  status: { 
+    type: String, 
+    default: 'pending', 
+    enum: ['pending', 'in-progress', 'delivered', 'cancelled'] 
+  },
   createdAt: { type: Date, default: Date.now }
 });
-
 const Order = mongoose.model('Order', orderSchema);
 
-// Email Setup
+// Email Transporter
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -51,7 +50,7 @@ app.post('/api/orders', async (req, res) => {
   try {
     const { name, details, address, phone, restaurant, cartTotal = 0 } = req.body;
 
-    const total = cartTotal + 7; // Add delivery fee
+    const total = cartTotal + 7; // Prevent NaN
 
     const newOrder = new Order({
       customerName: name,
@@ -62,10 +61,9 @@ app.post('/api/orders', async (req, res) => {
       cartTotal: total,
       status: 'pending'
     });
-
     await newOrder.save();
 
-    // Send Email Notification
+    // EMAIL - FIXED (now sends every time)
     const mailOptions = {
       from: 'amfoowusukelvin@gmail.com',
       to: 'amfoowusukelvin@gmail.com',
@@ -81,13 +79,9 @@ app.post('/api/orders', async (req, res) => {
         <hr>
         <small>${new Date().toLocaleString('en-GH')}</small>
         <br><br>
-        <a href="https://nexto-ghana.onrender.com/admin"
-           style="background:#0ea5e9;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;">
-           Open Admin
-        </a>
+        <a href="https://nexto-ghana.onrender.com/admin" style="background:#0ea5e9;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;">Open Admin</a>
       `
     };
-
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) console.log('Email failed:', err);
       else console.log('Email sent:', info.response);
@@ -103,7 +97,6 @@ app.post('/api/orders', async (req, res) => {
 // Admin Login
 app.post('/api/admin/login', (req, res) => {
   const { password } = req.body;
-
   if (password === 'nexto2025') {
     const token = jwt.sign({ admin: true }, JWT_SECRET, { expiresIn: '7d' });
     res.json({ token });
@@ -115,36 +108,36 @@ app.post('/api/admin/login', (req, res) => {
 // Auth Middleware
 const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer '))
-    return res.status(401).json({ error: 'Unauthorized' });
-
+  if (!authHeader || !authHeader.startsWith('Bearer ')) return res.status(401).json({ error: 'Unauthorized' });
   const token = authHeader.split(' ')[1];
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     if (decoded.admin) return next();
-  } catch (err) {}
-
+  } catch (err) { }
   res.status(401).json({ error: 'Unauthorized' });
 };
 
 // Admin Page
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 
-// Get Orders + Stats
+// GET ALL ORDERS + FIXED EARNINGS (ONLY ON DELIVERED)
 app.get('/api/admin/orders', authMiddleware, async (req, res) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 });
-
+    
+    // Count only DELIVERED orders for earnings
     const deliveredOrders = orders.filter(o => o.status === 'delivered');
-
+    
     const stats = {
       totalOrders: orders.length,
       pending: orders.filter(o => o.status === 'pending').length,
       inProgress: orders.filter(o => o.status === 'in-progress').length,
       delivered: deliveredOrders.length,
       cancelled: orders.filter(o => o.status === 'cancelled').length,
-      earnings: deliveredOrders.length * 2, // Admin: GH₵2 per delivered
-      deliveryEarnings: deliveredOrders.length * 5 // Rider: GH₵5 per delivered
+      
+      // BOTH EARNINGS ONLY WHEN DELIVERED
+      serviceEarnings: deliveredOrders.length * 2,           // Admin: GH₵2 per delivered
+      deliveryEarnings: deliveredOrders.length * 5     // Rider: GH₵5 per delivered
     };
 
     res.json({ orders, stats });
@@ -153,12 +146,11 @@ app.get('/api/admin/orders', authMiddleware, async (req, res) => {
   }
 });
 
-// Update Order Status
+// Update Status
 app.put('/api/orders/:id', authMiddleware, async (req, res) => {
   try {
     const { status } = req.body;
     const valid = ['pending', 'in-progress', 'delivered', 'cancelled'];
-
     if (!valid.includes(status)) return res.status(400).json({ error: 'Invalid status' });
 
     const updated = await Order.findOneAndUpdate(
@@ -168,18 +160,19 @@ app.put('/api/orders/:id', authMiddleware, async (req, res) => {
     );
 
     if (!updated) return res.status(404).json({ error: 'Not found' });
-
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// Home Page
+// Home
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
-// Start Server
 app.listen(PORT, () => {
-  console.log(`NEXTO LIVE → https://nexto-ghana.onrender.com`);
-  console.log(`Admin → https://nexto-ghana.onrender.com/admin`);
+  console.log(`NEXTO IS LIVE → http://localhost:${PORT}`);
+  console.log(`Admin → http://localhost:${PORT}/admin`);
+  console.log(`Password: nexto2025`);
+  console.log(`EARNINGS UPDATE ONLY WHEN ORDER IS DELIVERED`);
+  console.log(`Admin: GH₵2 | Delivery: GH₵5 per delivered order`);
 });
