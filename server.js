@@ -5,15 +5,16 @@ const jwt = require('jsonwebtoken');
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;  // Render uses PORT env
 const JWT_SECRET = 'nexto_super_secret_key_2025';
 
-// Middleware
+// Middleware - FIXED FOR RENDER (IMAGES NOW WORK 100%)
 app.use(express.json());
-app.use(express.static(__dirname));
-app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use(express.static('.'));                    // Serve all files from root
+app.use('/images', express.static('images'));    // Direct access to images folder
+app.use(express.static('public'));               // Extra safety
 
-// MongoDB Connect – FIXED WITH ENV VAR
+// MongoDB Connect – uses Render env var
 mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://Nexto:FCjqg5HUNqpNHJDm@nexto.cphxna8.mongodb.net/?retryWrites=true&w=majority')
   .then(() => console.log('MongoDB connected!'))
   .catch(err => console.log('DB Error:', err));
@@ -76,7 +77,7 @@ app.post('/api/orders', async (req, res) => {
         <hr>
         <small>${new Date().toLocaleString('en-GH')}</small>
         <br><br>
-        <a href="http://localhost:3000/admin" style="background:#0ea5e9;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;">Open Admin</a>
+        <a href="https://nexto-ghana.onrender.com/admin" style="background:#0ea5e9;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;">Open Admin</a>
       `
     };
     transporter.sendMail(mailOptions).catch(err => console.log('Email failed:', err));
@@ -119,7 +120,6 @@ app.get('/api/admin/orders', authMiddleware, async (req, res) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 });
     
-    // Count only DELIVERED orders for earnings
     const deliveredOrders = orders.filter(o => o.status === 'delivered');
     
     const stats = {
@@ -128,10 +128,8 @@ app.get('/api/admin/orders', authMiddleware, async (req, res) => {
       inProgress: orders.filter(o => o.status === 'in-progress').length,
       delivered: deliveredOrders.length,
       cancelled: orders.filter(o => o.status === 'cancelled').length,
-      
-      // BOTH EARNINGS ONLY WHEN DELIVERED
-      earnings: deliveredOrders.length * 2,           // Admin: GH₵2 per delivered
-      deliveryEarnings: deliveredOrders.length * 5     // Rider: GH₵5 per delivered
+      earnings: deliveredOrders.length * 2,
+      deliveryEarnings: deliveredOrders.length * 5
     };
 
     res.json({ orders, stats });
@@ -163,10 +161,9 @@ app.put('/api/orders/:id', authMiddleware, async (req, res) => {
 // Home
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
+// Start server
 app.listen(PORT, () => {
-  console.log(`NEXTO IS LIVE → http://localhost:${PORT}`);
-  console.log(`Admin → http://localhost:${PORT}/admin`);
+  console.log(`NEXTO IS LIVE → https://nexto-ghana.onrender.com`);
+  console.log(`Admin → https://nexto-ghana.onrender.com/admin`);
   console.log(`Password: nexto2025`);
-  console.log(`EARNINGS UPDATE ONLY WHEN ORDER IS DELIVERED`);
-  console.log(`Admin: GH₵2 | Delivery: GH₵5 per delivered order`);
 });
