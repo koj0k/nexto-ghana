@@ -8,14 +8,17 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const JWT_SECRET = 'nexto_super_secret_key_2025';
 
+// Middleware
 app.use(express.json());
 app.use(express.static('.'));
 app.use('/images', express.static('images'));
 
+// MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://Nexto:FCjqg5HUNqpNHJDm@nexto.cphxna8.mongodb.net/?retryWrites=true&w=majority')
   .then(() => console.log('MongoDB connected!'))
   .catch(err => console.log('DB Error:', err));
 
+// Order Schema
 const orderSchema = new mongoose.Schema({
   id: { type: String, unique: true, default: () => Math.random().toString(36).substr(2, 9) },
   customerName: String,
@@ -29,6 +32,7 @@ const orderSchema = new mongoose.Schema({
 });
 const Order = mongoose.model('Order', orderSchema);
 
+// Email
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -37,6 +41,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// Submit Order
 app.post('/api/orders', async (req, res) => {
   try {
     const { name, details, address, phone, restaurant, cartTotal = 0 } = req.body;
@@ -68,7 +73,7 @@ app.post('/api/orders', async (req, res) => {
         <hr>
         <small>${new Date().toLocaleString('en-GH')}</small>
         <br><br>
-        <a href="https://nexto-ghana.onrender.com/admin" style="background:#0ea5e9;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;">Open Admin Panel</a>
+        <a href="https://nexto-ghana.onrender.com/admin" style="background:#0ea5e9;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;">Open Admin</a>
       `
     };
     transporter.sendMail(mailOptions);
@@ -80,6 +85,7 @@ app.post('/api/orders', async (req, res) => {
   }
 });
 
+// Admin Login
 app.post('/api/admin/login', (req, res) => {
   const { password } = req.body;
   if (password === 'nexto2025') {
@@ -90,6 +96,7 @@ app.post('/api/admin/login', (req, res) => {
   }
 });
 
+// Auth Middleware
 const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) return res.status(401).json({ error: 'Unauthorized' });
@@ -101,8 +108,10 @@ const authMiddleware = (req, res, next) => {
   res.status(401).json({ error: 'Unauthorized' });
 };
 
+// Admin Page
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 
+// GET ORDERS + FIXED EARNINGS
 app.get('/api/admin/orders', authMiddleware, async (req, res) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 });
@@ -124,6 +133,7 @@ app.get('/api/admin/orders', authMiddleware, async (req, res) => {
   }
 });
 
+// Update Status
 app.put('/api/orders/:id', authMiddleware, async (req, res) => {
   try {
     const { status } = req.body;
@@ -143,6 +153,7 @@ app.put('/api/orders/:id', authMiddleware, async (req, res) => {
   }
 });
 
+// Home
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
 app.listen(PORT, () => {
