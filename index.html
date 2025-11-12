@@ -144,7 +144,7 @@
     </div>
   </div>
 
-  <!-- FOOTER   
+  <!-- FOOTER -->
   <footer class="footer">
     <div class="container mx-auto px-4 text-center">
       <p class="text-gray-400 mb-4 text-lg font-medium">Get in Touch</p>
@@ -365,9 +365,10 @@
 
     function updateCart() {
       const items = document.getElementById('cartItems');
-      const subtotal = cart.reduce((a, b) => a + b.price, 0).toFixed(2);
-      const total = (parseFloat(subtotal) + serviceFee + deliveryFee - promoDiscount).toFixed(2);
-      document.getElementById('subtotal').textContent = `GH₵${subtotal}`;
+      const subtotal = cart.reduce((sum, item) => sum + (item.price || 0), 0);
+      const total = (subtotal + serviceFee + deliveryFee - promoDiscount).toFixed(2);
+      
+      document.getElementById('subtotal').textContent = `GH₵${subtotal.toFixed(2)}`;
       document.getElementById('total').textContent = `GH₵${total}`;
       document.getElementById('cartCount').textContent = cart.length;
 
@@ -429,7 +430,8 @@
 
       const phone = rawPhone.replace(/[^\d]/g, '').slice(-10);
       const details = cart.map(c => `${c.name} (GH₵${c.price.toFixed(2)})`).join(' | ');
-      const total = cart.reduce((a, b) => a + b.price, 0);
+      const subtotal = cart.reduce((sum, item) => sum + (item.price || 0), 0);
+      const cartTotal = subtotal + 7; // FIXED: Prevent NaN
 
       try {
         const res = await fetch(`${API}/orders`, {
@@ -438,7 +440,7 @@
           body: JSON.stringify({ 
             name, details, address, phone,
             restaurant: cart[0].restaurant, 
-            cartTotal: total + 7
+            cartTotal: cartTotal
           })
         });
 
