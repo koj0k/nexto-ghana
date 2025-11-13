@@ -571,7 +571,7 @@
             </td>
             <td>${o.deliveryAddress}</td>
             <td>${o.phone}</td>
-            <td><strong>GH₵${o.cartTotal.toFixed(2)}</strong></td>
+            <td><strong>GH₵${(o.totalFood + 5 + 2).toFixed(2)}</strong></td>
             <td><span class="status ${o.status.replace(/-/g, '')}">${o.status.replace(/-/g, ' ')}</span></td>
             <td>
               <div class="btn-group">
