@@ -100,6 +100,59 @@
       0% { opacity: 1; transform: scale(1) translate(0,0); } 
       100% { opacity: 0; transform: scale(0.3) translate(var(--tx), var(--ty)); } 
     }
+    /* RESPONSIVE DESIGN FOR ALL DEVICES */
+    /* Mobile (iPhone, Android < 640px) */
+    @media (max-width: 640px) {
+      .hero { padding: 4rem 1rem 2rem !important; }
+      .hero h1 { font-size: 2.5rem !important; line-height: 1.2; }
+      .hero p { font-size: 1.2rem !important; }
+      .sidebar { width: 100% !important; right: -100% !important; }
+      .cart-btn, .whatsapp-btn, .back-to-top { width: 50px !important; height: 50px !important; font-size: 1.2rem !important; bottom: 1rem !important; }
+      .cart-count { width: 20px !important; height: 20px !important; font-size: 0.7rem !important; }
+      .restaurant-img { width: 100% !important; height: 140px !important; }
+      .food-img { height: 140px !important; }
+      .container { padding: 0 0.5rem !important; }
+      .grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3 { grid-template-columns: 1fr !important; gap: 1rem !important; }
+      .w-full.max-w-xl { max-width: 100% !important; }
+      .text-5xl.md\\:text-7xl { font-size: 2.5rem !important; }
+      .text-xl.md\\:text-2xl { font-size: 1.2rem !important; }
+      .px-6 { padding-left: 1rem !important; padding-right: 1rem !important; }
+      .p-4 { padding: 0.75rem !important; }
+      .p-6 { padding: 1rem !important; }
+      .py-16 { padding-top: 2rem !important; padding-bottom: 2rem !important; }
+    }
+    /* Tablet/iPad (641px - 1024px) */
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .hero { padding: 6rem 1.5rem 4rem !important; }
+      .hero h1 { font-size: 3.5rem !important; }
+      .restaurant-img { width: 220px !important; height: 160px !important; }
+      .food-img { height: 160px !important; }
+      .sidebar { width: 80% !important; }
+      .grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3 { grid-template-columns: repeat(2, 1fr) !important; }
+      .cart-btn, .whatsapp-btn, .back-to-top { bottom: 1.5rem !important; }
+      .text-5xl.md\\:text-7xl { font-size: 3.5rem !important; }
+      .text-xl.md\\:text-2xl { font-size: 1.5rem !important; }
+      .px-6 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+      .p-4 { padding: 1rem !important; }
+      .p-6 { padding: 1.5rem !important; }
+    }
+    /* Desktop (1025px+) */
+    @media (min-width: 1025px) {
+      .hero { padding: 8rem 2rem 6rem !important; }
+      .hero h1 { font-size: 4rem !important; }
+      .restaurant-img { width: 260px !important; height: 180px !important; }
+      .food-img { height: 200px !important; }
+      .sidebar { width: 420px !important; }
+      .grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3 { grid-template-columns: repeat(3, 1fr) !important; }
+      .cart-btn, .whatsapp-btn, .back-to-top { width: 70px !important; height: 70px !important; font-size: 1.8rem !important; bottom: 2rem !important; }
+      .cart-count { width: 28px !important; height: 28px !important; font-size: 0.9rem !important; }
+      .text-5xl.md\\:text-7xl { font-size: 4rem !important; }
+      .text-xl.md\\:text-2xl { font-size: 1.8rem !important; }
+      .px-6 { padding-left: 2rem !important; padding-right: 2rem !important; }
+      .p-4 { padding: 1.25rem !important; }
+      .p-6 { padding: 2rem !important; }
+      .py-16 { padding-top: 4rem !important; padding-bottom: 4rem !important; }
+    }
   </style>
 </head>
 <body class="transition-colors duration-500">
@@ -129,352 +182,4 @@
     <div id="restaurants" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
   </section>
 
-  <!-- ORDER CONFIRMATION (IN-PAGE) -->
-  <div id="confirmation" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center hidden z-50 p-4">
-    <div class="bg-white dark:bg-gray-900 rounded-3xl p-10 max-w-lg w-full text-center shadow-2xl">
-      <i class="fas fa-check-circle text-8xl text-green-500 mb-6"></i>
-      <h2 class="text-4xl font-bold mb-4">Order Placed Successfully!</h2>
-      <p class="text-xl mb-2">Your Order ID: <span id="confirmId" class="font-bold sky-blue"></span></p>
-      <p class="text-lg mb-6">We'll call you soon. Estimated delivery: 25-40 mins</p>
-      <div class="w-32 h-32 mx-auto mb-6">
-        <img src="delivery-bike.gif" alt="Rider coming" class="w-full h-full object-contain">
-      </div>
-      <button onclick="document.getElementById('confirmation').classList.add('hidden')" 
-              class="btn-blue text-lg px-12 py-4">Continue Browsing</button>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div class="container mx-auto px-4 text-center">
-      <p class="text-gray-400 mb-4 text-lg font-medium">Get in Touch</p>
-      <div class="flex flex-col md:flex-row justify-center items-center space-y-2 md:space-y-0 md:space-x-8">
-        <a href="mailto:amfoowusukelvin@gmail.com" class="flex items-center justify-center text-white hover:text-sky-blue">
-          <i class="fas fa-envelope mr-2"></i> amfoowusukelvin@gmail.com
-        </a>
-        <a href="tel:+233204679369" class="flex items-center justify-center text-white hover:text-sky-blue">
-          <i class="fas fa-phone mr-2"></i> +233 20 467 9369
-        </a>
-      </div>
-      <p class="text-sm text-gray-500 mt-4">© 2025 Nexto. All rights reserved.</p>
-    </div>
-  </footer>
-
-  <!-- CART SIDEBAR -->
-  <div id="cartSidebar" class="sidebar bg-white dark:bg-gray-800">
-    <div class="flex justify-between items-center mb-6">
-      <h3 class="text-2xl font-bold flex items-center text-gray-800 dark:text-white">
-        <i class="fas fa-shopping-cart mr-2 sky-blue"></i> Your Cart
-      </h3>
-      <i onclick="toggleCart()" class="close-btn text-gray-500 hover:text-gray-800 dark:hover:text-white">X</i>
-    </div>
-    <div id="cartItems" class="space-y-4"></div>
-    <div class="mt-8 p-4 bg-blue-50 dark:bg-gray-700 rounded-xl">
-      <div class="flex justify-between text-lg mb-2 text-gray-800 dark:text-gray-200"><span>Subtotal:</span> <span id="subtotal">GH₵0</span></div>
-      <div class="flex justify-between text-lg mb-2 text-gray-800 dark:text-gray-200"><span>Service Fee:</span> <span>GH₵2</span></div>
-      <div class="flex justify-between text-lg mb-2 text-gray-800 dark:text-gray-200"><span>Delivery Fee:</span> <span>GH₵5</span></div>
-      <div class="flex justify-between text-xl font-bold sky-blue"><span>Total:</span> <span id="total">GH₵7</span></div>
-    </div>
-    <input type="text" id="promoCode" placeholder="Have a promo code?" class="w-full p-4 border rounded-xl mt-4 dark:bg-gray-700 dark:border-gray-600">
-    <button onclick="applyPromo()" class="w-full bg-gray-200 dark:bg-gray-600 py-2 rounded-xl mt-2">Apply Promo</button>
-    <button onclick="showCheckout()" class="w-full btn-blue mt-6 text-lg py-3">Proceed to Checkout</button>
-  </div>
-
-  <!-- CART BUTTON -->
-  <div onclick="toggleCart()" class="cart-btn">
-    <i class="fas fa-shopping-cart"></i>
-    <div id="cartCount" class="cart-count">0</div>
-  </div>
-
-  <!-- WHATSAPP BUTTON -->
-  <a href="https://wa.me/233204679369?text=Hi%20Nexto!%20I%20need%20help%20with%20my%20order" target="_blank" class="whatsapp-btn">
-    <i class="fab fa-whatsapp"></i>
-  </a>
-
-  <!-- BACK TO TOP -->
-  <div onclick="window.scrollTo({top:0,behavior:'smooth'})" class="back-to-top">
-    <i class="fas fa-arrow-up"></i>
-  </div>
-
-  <!-- CHECKOUT MODAL -->
-  <div id="checkoutModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-50 p-4">
-    <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full shadow-2xl">
-      <h3 class="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-white">Complete Your Order</h3>
-      <input type="text" id="name" placeholder="Full Name" class="w-full p-4 border rounded-xl mb-4 border-gray-300 dark:bg-gray-700 dark:border-gray-600">
-      <input type="text" id="phone" placeholder="Phone (055...)" class="w-full p-4 border rounded-xl mb-4 border-gray-300 dark:bg-gray-700 dark:border-gray-600">
-      <textarea id="address" placeholder="Delivery Address (e.g. Osu, near Papaye)" class="w-full p-4 border rounded-xl mb-4 h-28 border-gray-300 dark:bg-gray-700 dark:border-gray-600"></textarea>
-      <div class="flex gap-3">
-        <button id="placeOrderBtn" onclick="placeOrder()" class="flex-1 bg-sky-blue text-white py-3 rounded-xl font-bold hover:bg-blue-600">Place Order</button>
-        <button onclick="hideCheckout()" class="flex-1 bg-gray-300 dark:bg-gray-600 py-3 rounded-xl font-bold hover:bg-gray-400">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const API = '/api';
-    let cart = [];
-    const deliveryFee = 5;
-    const serviceFee = 2;
-    let promoDiscount = 0;
-
-    const restaurants = [
-      { id: 1, name: "Papaye Fast Food", rating: 4.8, time: "25-35 min", cuisine: "Ghanaian", image: "papaye.png", open: true },
-      { id: 2, name: "KFC Osu", rating: 4.6, time: "20-30 min", cuisine: "Fried Chicken", image: "kfc.png", open: true },
-      { id: 3, name: "Waakye Joint", rating: 4.9, time: "15-25 min", cuisine: "Local", image: "waakye-logo.png", open: true },
-      { id: 4, name: "Pizza Inn", rating: 4.5, time: "30-40 min", cuisine: "Pizza", image: "pizza-inn.png", open: true },
-      { id: 5, name: "Burger King", rating: 4.7, time: "25-35 min", cuisine: "Burgers", image: "burger-king.png", open: true }
-    ];
-
-    const menus = {
-      1: [{ name: "Jollof Rice + Chicken", price: 35, image: "jollof.jpg" }, { name: "Banku & Tilapia", price: 45, image: "banku.jpg" }],
-      2: [{ name: "Zinger Burger Combo", price: 38, image: "zinger.jpg" }, { name: "6pc Chicken Bucket", price: 85, image: "bucket.jpg" }],
-      3: [{ name: "Waakye + Add-Ons", price: 6, image: "waakye.jpg", addOns: true }],
-      4: [{ name: "Margherita Pizza", price: 55, image: "margherita.jpg" }, { name: "Pepperoni Pizza", price: 65, image: "pepperoni.jpg" }],
-      5: [{ name: "Whopper Meal", price: 40, image: "whopper.jpg" }, { name: "Cheeseburger", price: 25, image: "cheeseburger.jpg" }]
-    };
-
-    function renderRestaurants() {
-      const container = document.getElementById('restaurants');
-      const query = document.getElementById('search').value.toLowerCase();
-      const filtered = restaurants.filter(r => (r.name.toLowerCase().includes(query) || r.cuisine.toLowerCase().includes(query)) && r.open);
-      container.innerHTML = filtered.map(r => `
-        <div class="card-hover transition-all duration-300 bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden flex flex-col">
-          <div class="restaurant-img-container">
-            <img src="${r.image}" alt="${r.name}" class="restaurant-img" onerror="this.src='https://via.placeholder.com/260x180?text=Logo'">
-          </div>
-          <div class="p-6 pt-4 flex-1 flex flex-col justify-between">
-            <div>
-              <h3 class="text-xl font-bold text-gray-800 dark:text-white text-center">${r.name}</h3>
-              <div class="flex items-center justify-center gap-1 my-2">
-                <span class="text-yellow-500">★★★★★</span>
-                <span class="ml-1 text-sm font-medium sky-blue">${r.rating}</span>
-                <span class="ml-3 bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded-full">Open Now</span>
-              </div>
-              <p class="text-gray-600 dark:text-gray-400 text-center">${r.cuisine} • ${r.time}</p>
-            </div>
-            <button onclick="openMenu(${r.id})" class="mt-4 w-full btn-blue">View Menu</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function openMenu(id) {
-      const r = restaurants.find(x => x.id === id);
-      const menu = menus[id];
-      const modal = document.createElement('div');
-      modal.className = 'fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4';
-      modal.innerHTML = `
-        <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-4xl w-full max-h-screen overflow-y-auto p-6">
-          <div class="flex justify-between items-center mb-6">
-            <h3 class="text-2xl font-bold text-gray-800 dark:text-white">${r.name}</h3>
-            <button onclick="this.closest('.fixed').remove()" class="text-3xl text-gray-500 hover:text-gray-800 dark:hover:text-white">X</button>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            ${menu.map(item => `
-              <div class="border rounded-xl overflow-hidden card-hover border-gray-200 dark:border-gray-600">
-                <img src="${item.image}" alt="${item.name}" class="w-full food-img" onerror="this.src='https://via.placeholder.com/300x200?text=Food'">
-                <div class="p-4">
-                  <h4 class="font-semibold text-lg text-gray-800 dark:text-white">${item.name}</h4>
-                  <p class="sky-blue font-bold text-xl">GH₵${item.price}</p>
-                  ${item.addOns ? `
-                    <div class="mt-2 space-y-2">
-                      <label class="block text-sm text-gray-600 dark:text-gray-400">Eggs (GH₵3 each):</label>
-                      <select id="eggs-${id}" class="w-full p-2 border rounded dark:bg-gray-700"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
-                      <label class="block text-sm text-gray-600 dark:text-gray-400">Spaghetti (GH₵2):</label>
-                      <select id="spaghetti-${id}" class="w-full p-2 border rounded dark:bg-gray-700"><option value="0">0</option><option value="1">1</option><option value="2">2</option></select>
-                      <label class="block text-sm text-gray-600 dark:text-gray-400">Plantain (GH₵1.5):</label>
-                      <select id="plantain-${id}" class="w-full p-2 border rounded dark:bg-gray-700"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>
-                      <label class="block text-sm text-gray-600 dark:text-gray-400">Fish (+GH₵5):</label>
-                      <select id="fish-${id}" class="w-full p-2 border rounded dark:bg-gray-700"><option value="0">No</option><option value="5">Yes</option></select>
-                      <p class="sky-blue font-bold text-lg mt-2" id="waakye-total-${id}">Total: GH₵6</p>
-                    </div>
-                  ` : ''}
-                  <button onclick="addToCart('${item.name}', calculatePrice(${id}, ${item.price}, ${item.addOns ? 'true' : 'false'}), '${r.name}', ${item.addOns ? 'getAddOns(' + id + ')' : 'null'})" 
-                          class="mt-3 w-full bg-sky-blue text-white py-2 rounded-lg font-medium hover:bg-blue-600">
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
-      document.body.appendChild(modal);
-      if (menu[0] && menu[0].addOns) {
-        ['eggs', 'spaghetti', 'plantain', 'fish'].forEach(a => {
-          document.getElementById(`${a}-${id}`).addEventListener('change', () => updateWaakyeTotal(id));
-        });
-        updateWaakyeTotal(id);
-      }
-    }
-
-    function updateWaakyeTotal(id) {
-      const eggs = parseInt(document.getElementById(`eggs-${id}`).value) * 3;
-      const spaghetti = parseInt(document.getElementById(`spaghetti-${id}`).value) * 2;
-      const plantain = parseFloat(document.getElementById(`plantain-${id}`).value) * 1.5;
-      const fish = parseInt(document.getElementById(`fish-${id}`).value);
-      const total = 6 + eggs + spaghetti + plantain + fish;
-      document.getElementById(`waakye-total-${id}`).textContent = `Total: GH₵${total.toFixed(2)}`;
-    }
-
-    function getAddOns(id) {
-      return {
-        eggs: parseInt(document.getElementById(`eggs-${id}`).value),
-        spaghetti: parseInt(document.getElementById(`spaghetti-${id}`).value),
-        plantain: parseInt(document.getElementById(`plantain-${id}`).value),
-        fish: document.getElementById(`fish-${id}`).value === '5' ? 1 : 0
-      };
-    }
-
-    function calculatePrice(id, basePrice, isAddOns) {
-      if (!isAddOns) return basePrice;
-      const eggs = parseInt(document.getElementById(`eggs-${id}`).value) * 3;
-      const spaghetti = parseInt(document.getElementById(`spaghetti-${id}`).value) * 2;
-      const plantain = parseFloat(document.getElementById(`plantain-${id}`).value) * 1.5;
-      const fish = parseInt(document.getElementById(`fish-${id}`).value);
-      return basePrice + eggs + spaghetti + plantain + fish;
-    }
-
-    function addToCart(name, price, restaurant, addOns = null) {
-      const item = { name, price: parseFloat(price.toFixed(2)), restaurant };
-      if (addOns) {
-        item.addOns = addOns;
-        item.name += (addOns.eggs ? ` + ${addOns.eggs} Eggs` : '') +
-                     (addOns.spaghetti ? ` + ${addOns.spaghetti} Spaghetti` : '') +
-                     (addOns.plantain ? ` + ${addOns.plantain} Plantain` : '') +
-                     (addOns.fish ? ` + Fish` : '');
-      }
-      cart.push(item);
-      updateCart();
-
-      // FLY ANIMATION
-      const cartBtn = document.querySelector('.cart-btn');
-      const rect = cartBtn.getBoundingClientRect();
-      const fly = document.createElement('div');
-      fly.className = 'fly-item';
-      fly.innerHTML = 'Food';
-      fly.style.left = (event.clientX - 20) + 'px';
-      fly.style.top = (event.clientY - 20) + 'px';
-      fly.style.setProperty('--tx', (rect.left + 35 - event.clientX) + 'px');
-      fly.style.setProperty('--ty', (rect.top + 35 - event.clientY) + 'px');
-      document.body.appendChild(fly);
-      setTimeout(() => fly.remove(), 1000);
-
-      alert(`"${item.name}" added to cart!`);
-    }
-
-    function updateCart() {
-      const items = document.getElementById('cartItems');
-      const subtotal = cart.reduce((sum, item) => sum + (item.price || 0), 0);
-      const total = (subtotal + serviceFee + deliveryFee - promoDiscount).toFixed(2);
-      
-      document.getElementById('subtotal').textContent = `GH₵${subtotal.toFixed(2)}`;
-      document.getElementById('total').textContent = `GH₵${total}`;
-      document.getElementById('cartCount').textContent = cart.length;
-
-      items.innerHTML = cart.length ? cart.map((item, i) => `
-        <div class="flex justify-between items-center border-b pb-3 mb-3 border-gray-200 dark:border-gray-600">
-          <div>
-            <p class="font-medium text-gray-800 dark:text-white">${item.name}</p>
-            <p class="text-sm text-gray-500 dark:text-gray-400">${item.restaurant}</p>
-          </div>
-          <div class="text-right">
-            <p class="font-bold text-gray-800 dark:text-white">GH₵${item.price.toFixed(2)}</p>
-            <button onclick="cart.splice(${i},1); updateCart()" class="text-red-500 text-sm hover:underline">Remove</button>
-          </div>
-        </div>
-      `).join('') : '<p class="text-center text-gray-500 dark:text-gray-400">Your cart is empty</p>';
-    }
-
-    function applyPromo() {
-      const code = document.getElementById('promoCode').value.trim().toUpperCase();
-      if (code === 'NEXTO5' || code === 'FREEDELIVERY') {
-        promoDiscount = 5;
-        alert('Promo applied! GH₵5 off');
-      } else {
-        promoDiscount = 0;
-        alert('Invalid promo code');
-      }
-      updateCart();
-    }
-
-    function toggleCart() {
-      document.getElementById('cartSidebar').classList.toggle('open');
-    }
-
-    function showCheckout() {
-      if (!cart.length) return alert('Your cart is empty!');
-      document.getElementById('checkoutModal').classList.remove('hidden');
-      toggleCart();
-    }
-
-    function hideCheckout() {
-      document.getElementById('checkoutModal').classList.add('hidden');
-    }
-
-    async function placeOrder() {
-      const btn = document.getElementById('placeOrderBtn');
-      btn.disabled = true;
-      btn.textContent = "Placing...";
-
-      const name = document.getElementById('name').value.trim();
-      const rawPhone = document.getElementById('phone').value.trim();
-      const address = document.getElementById('address').value.trim();
-
-      if (!name || !rawPhone || !address) {
-        alert('Please fill all fields!');
-        btn.disabled = false;
-        btn.textContent = "Place Order";
-        return;
-      }
-
-      const phone = rawPhone.replace(/[^\d]/g, '').slice(-10);
-      const details = cart.map(c => `${c.name} (GH₵${c.price.toFixed(2)})`).join(' | ');
-      const subtotal = cart.reduce((sum, item) => sum + (item.price || 0), 0);
-      const cartTotal = subtotal + 7; // FIXED: Prevent NaN
-
-      try {
-        const res = await fetch(`${API}/orders`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            name, details, address, phone,
-            restaurant: cart[0].restaurant, 
-            cartTotal: cartTotal
-          })
-        });
-
-        if (!res.ok) throw new Error('Failed');
-        const orderData = await res.json();
-
-        document.getElementById('confirmId').textContent = orderData.id;
-        document.getElementById('confirmation').classList.remove('hidden');
-        cart = [];
-        promoDiscount = 0;
-        updateCart();
-        hideCheckout();
-
-      } catch (err) {
-        alert('Order failed. Check internet or try again.');
-        console.error(err);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Place Order";
-      }
-    }
-
-    function toggleDarkMode() {
-      document.documentElement.classList.toggle('dark');
-      localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
-    }
-
-    window.addEventListener('scroll', () => {
-      document.querySelector('.back-to-top').classList.toggle('visible', window.scrollY > 500);
-    });
-
-    if (localStorage.getItem('darkMode') === 'true') document.documentElement.classList.add('dark');
-    document.getElementById('search').addEventListener('input', renderRestaurants);
-    renderRestaurants();
-  </script>
-</body>
-</html>
+  <!-- ORDER CONFIRM
